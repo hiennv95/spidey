@@ -2,18 +2,21 @@ package main
 
 import (
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/go-redis/redis"
 	"github.com/tinrab/spidey/account"
 	"github.com/tinrab/spidey/catalog"
 	"github.com/tinrab/spidey/order"
 )
 
+// Server is server
 type Server struct {
 	accountClient *account.Client
 	catalogClient *catalog.Client
 	orderClient   *order.Client
+	redisClient   *redis.Client
 }
 
-func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) {
+func NewGraphQLServer(accountUrl string, catalogURL string, orderURL string, redisURL string) (*Server, error) {
 	// Connect to account service
 	accountClient, err := account.NewClient(accountUrl)
 	if err != nil {
@@ -35,13 +38,19 @@ func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) 
 		return nil, err
 	}
 
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: redisURL,
+	})
+
 	return &Server{
 		accountClient,
 		catalogClient,
 		orderClient,
+		redisClient,
 	}, nil
 }
 
+// Mutation will return MutationResolver
 func (s *Server) Mutation() MutationResolver {
 	return &mutationResolver{
 		server: s,
@@ -56,6 +65,11 @@ func (s *Server) Query() QueryResolver {
 
 func (s *Server) Account() AccountResolver {
 	return &accountResolver{
+		server: s,
+	}
+}
+func (s *Server) Subscription() SubscriptionResolver {
+	return &subscriptionResolver{
 		server: s,
 	}
 }

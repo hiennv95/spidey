@@ -4,10 +4,13 @@ go 1.13
 
 require (
 	github.com/99designs/gqlgen v0.10.2
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang/protobuf v1.3.2
 	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/websocket v1.2.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.3.0
+	github.com/rs/cors v1.6.0
 	github.com/segmentio/ksuid v1.0.2
 	github.com/tinrab/retry v1.0.0
 	github.com/vektah/gqlparser v1.2.1

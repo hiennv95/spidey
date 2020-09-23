@@ -63,3 +63,8 @@ type Query {
   accounts(pagination: PaginationInput, id: String): [Account!]!
   products(pagination: PaginationInput, query: String, id: String): [Product!]!
 }
+type Subscription {
+  messagePosted(id: String!, message: String): String!
+  userJoined(id: String!): String!
+}
+
